@@ -21,7 +21,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'ofabioalexcarvalho@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Senh@2020'
+app.config['MAIL_PASSWORD'] = 'XXXXXXX'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -201,4 +201,5 @@ def create_tables():
     db.create_all()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run()
+    # app.run(host="0.0.0.0", port=8000, debug=True)  # For Docker
