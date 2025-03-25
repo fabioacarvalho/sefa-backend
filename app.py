@@ -7,6 +7,11 @@ from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
 from flask_cors import CORS
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import os
+
 
 
 # Configurações básicas do Flask
@@ -42,6 +47,7 @@ class FormSubmission(db.Model):
     email = db.Column(db.String(150), nullable=False)
     verification_code = db.Column(db.String(10), nullable=False)
     is_verified = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 # UTILITÁRIOS
 def generate_verification_code(length=6):
@@ -49,10 +55,45 @@ def generate_verification_code(length=6):
     return ''.join(random.choices(string.digits, k=length))
 
 def send_verification_email(recipient, code):
+    # rhrf snpr kisr ephe
     """Envia e-mail de verificação para o destinatário."""
-    msg = Message('Código de Verificação', sender=app.config['MAIL_USERNAME'], recipients=[recipient])
-    msg.body = f"Seu código de verificação é: {code}"
-    mail.send(msg)
+    
+    base_email = 'otestsdev@gmail.com'
+    app_password = 'rhrf snpr kisr ephe'  # 🔹 Gere uma "App Password" no Google
+
+    assunto = 'Código de Verificação'
+    body = f"""
+    <html>
+        <body>
+            <h3>Código de Verificação</h3>
+            <p>Seu código de verificação é: <strong>{code}</strong></p>
+        </body>
+    </html>
+    """
+
+    # Configura SMTP
+    try:
+        servidor = smtplib.SMTP('smtp.gmail.com', 587)
+        servidor.starttls()
+        servidor.login(base_email, app_password)
+
+        # Criando mensagem formatada
+        msg = MIMEMultipart()
+        msg['From'] = base_email
+        msg['To'] = recipient
+        msg['Subject'] = assunto
+
+        msg.attach(MIMEText(body, 'html'))
+
+        # Enviando e-mail
+        servidor.sendmail(base_email, recipient, msg.as_string())
+        servidor.quit()
+
+        print('E-mail enviado com sucesso!')
+    except Exception as e:
+        print(f'Erro ao enviar e-mail: {e}')
+
+
 
 # ROTAS DA API
 
