@@ -230,7 +230,8 @@ def get_form():
         'cargo': form.cargo,
         'municipio': form.municipio,
         'email': form.email,
-        'is_verified': form.is_verified
+        'is_verified': form.is_verified,
+        'created_at': form.created_at
     } for form in form_submissions if form.is_verified == True]
 
     return jsonify({'forms': infos}), 200
