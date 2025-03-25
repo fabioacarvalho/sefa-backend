@@ -1,0 +1,9 @@
+Flask==2.2.5
+Flask-SQLAlchemy==3.0.5
+Flask-Mail==0.9.1
+Werkzeug==2.2.3
+numpy==1.23.5 
+pandas==2.0.3
+gunicorn==21.2.0
+openpyxl==3.1.2  # Necessário para ler arquivos Excel
+flask-cors==5.0.1

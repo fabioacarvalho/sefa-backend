@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Serviço para o Backend (Flask)
+  backend:
+    build: ./backend
+    container_name: flask_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Serviço para o Frontend (React)
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    environment:
+      - REACT_APP_API_URL=http://backend:8000
+
+  # Serviço para o Banco de Dados (SQLite)
+  db:
+    image: nouchka/sqlite3
+    container_name: sqlite_db
+    volumes:
+      - ./backend/app.db:/app/app.db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
